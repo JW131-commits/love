@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Aiym I love you</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+<body>
+
+    <div class="overlay">
+        <h2 id="animatedText"></h2>
+
+        <div id="messages">
+            <div class="corner-message top-left">Я люблю тебя, солнышко</div>
+            <div class="corner-message top-right">Улыбайся чаще</div>
+            <div class="corner-message center">Никогда не болей</div>
+            <div class="corner-message bottom-left">Не переживай по пустякам</div>
+            <div class="corner-message bottom-right">Я всегда с тобой</div>
+        </div>
+
+        <div id="hearts-container"></div>
+    </div>
+
+    <script>
+        const text = 'Aiym I love you';
+        const animatedText = document.getElementById('animatedText');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                animatedText.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 300);
+            } else {
+                setTimeout(() => {
+                    animatedText.style.opacity = 0;
+                    startHearts();
+                    showMessages();
+                }, 1500);
+            }
+        }
+        typeWriter();
+
+        // Сердечки
+        const heartsContainer = document.getElementById('hearts-container');
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = 3 + Math.random() * 2 + 's';
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+        let heartsInterval;
+        function startHearts() {
+            heartsInterval = setInterval(createHeart, 300);
+        }
+
+        // Сообщения с таймером (показывать каждое 10 сек)
+        const messages = document.querySelectorAll('.corner-message');
+        messages.forEach(m => m.style.opacity = 0);
+
+        function showMessages() {
+            let idx = 0;
+            function showNext() {
+                messages.forEach(m => m.style.opacity = 0);
+                messages[idx].style.opacity = 1;
+                idx = (idx + 1) % messages.length;
+                setTimeout(showNext, 10000);
+            }
+            showNext();
+        }
+    </script>
+
+</body>
+
+</html>
